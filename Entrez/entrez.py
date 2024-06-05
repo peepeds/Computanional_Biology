@@ -1,23 +1,21 @@
 # %%
-
-# %%
 from Bio import Entrez
 Entrez.email = 'learnbiopython@gmail.com'
 
 # %%
-term1 = [
-    'Bos gaurus', 'Antelope cervicapra', 'Gazella bennettii', 'Boselaphus tragocamelus',
-    'Canis lupus', 'Elephas maximus',
-    'Cervus canadensis', 'Pavo cristatus', 'Grus leucogeranus', 'Vulpes vulpes',
-    'Rhinoceros unicornis', 'Panthera Tigris', 'Crocodylus palustris', 'Gavialis gangeticus',
-    'Equus caballus', 'Equus quagga', 'Babalus bubalis', 'Sus scrofa', 'Camelus dromedaries',
-    'Giraffa camelopardalis ', 'Hemidactylus flaviviridis', 'Hippopotamus amphibius',
-    'Macaca mulatta', 'Canis lupus', 'Felis domesticus', 'Acinonyx jubatus', 'Rattus rattus',
-    'Mus musculus', 'Oryctolagus cuniculus', 'Bubo virginianus', 'Passer domesticus',
-    'Corvus splendens', 'Acridotheres tristis', 'Psittacula eupatria', 'Molpastes cafer',
-    'Eudynamis scolopaccus', 'Columba livia', 'Naja naja', 'Ophiophagus hannah',
-    'Hydrophiinae ', 'Python molurus', 'Ptyas mucosa'
-]
+term1 = ['Boss saurus', 'Antelope cervicapra', 'Gazella bbennettii', 
+         'Boselaphus tragocamelus', 'Canis lupus', 'Panthera leo', 
+         'Elephas laximus', 'Equus africanus', 'Panthera pardus', 
+         'Cervus canadensis', 'Pavo cristatus', 'Grus leucogeranus', 
+         'Vulpes vulpes', 'Rhinoceros unicornis', 'Panthera Tigris', 
+         'Crocodylus palustris', 'Gavialis gangeticus', 'Equus caballus', 
+         'Equus quagga', 'Babalus bubalis', 'Sus scrofa', 'Camelus dromedaries', 
+         'Giraffa camelopardalis ', 'Hemidactylus flaviviridis', 'Hippopotamus amphibius', 
+         'Macaca mulatta', 'Canis lupus', 'Felis domesticus', 'Acinonyx jubatus', 
+         'Rattus rattus', 'Mus musculus', 'Oryctolagus cuniculus', 'Bubo virginianus', 
+         'Passer domesticus', 'Corvus splendens', 'Acridotheres tristis', 'Psittacula eupatria', 
+         'Molpastes caferr', 'Eudynamis scolopaccus', 'Columba livia', 'Naja naja', 'Ophiophagus hannah', 
+         'Hydrophiinae ', 'Python molurus', 'Ptyas mucosa']
 
 term2 = [
     'Bos gaurus', 'Gazella bennettii', 'Boselaphus tragocamelus',
@@ -87,6 +85,8 @@ for name in term2:
 
 
 # %%
+print('\n')
+print("Common Names : ",commonNames(term3))
 def fetch_taxonomy_info(terms):
     try:
         handle = Entrez.esearch(db='taxonomy', term=terms)
