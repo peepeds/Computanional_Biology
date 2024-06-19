@@ -1,0 +1,72 @@
+# %%
+from Bio.Seq import Seq 
+from Bio.SeqRecord import SeqRecord
+from Bio import Phylo
+from Bio.Align import MultipleSeqAlignment
+from Bio.Phylo.TreeConstruction import DistanceCalculator, DistanceTreeConstructor
+
+# %%
+# Making Model
+victim = Seq('ATCGTAGCTAGTCGA')
+Family = [
+    Seq('ATCGTGGCTAGTCGA'),
+    Seq('ATCGTACGTAGTCGA'),
+    Seq('ATCGTAGATAGTCGA'),
+    Seq('ATCGTACGCAGTCGA'),
+    Seq('ATCGTAGCTCGTCGA'),
+]
+sequences = [
+    SeqRecord(Seq('ATCGTGGCTAGTCGA'),id = 'Family 1'),
+    SeqRecord(Seq('ATCGTACGTAGTCGA'),id = 'Family 2'),
+    SeqRecord(Seq('ATCGTAGATAGTCGA'),id = 'Family 3'),
+    SeqRecord(Seq('ATCGTACGCAGTCGA'),id = 'Family 4'),
+    SeqRecord(Seq('ATCGTAGCTCGTCGA'),id = 'Family 5'),
+    SeqRecord(Seq('ATCGTAGCTCGTCGA'),id = 'Victim')  
+]
+
+# %%
+# Distance Calculator
+def hamming_distance(seq1, seq2):
+    return sum(c1 != c2 for c1, c2 in zip(seq1, seq2))
+
+# %%
+# find the nearest family member
+hamming_distances = [hamming_distance(victim, member) for member in Family]
+min_distance = min(hamming_distances)
+nearest_fam = [index + 1 for index, distance in enumerate(hamming_distances) if distance == min_distance]
+nearest_fam_victims = [Family[i-1] for i in nearest_fam]
+
+# %%
+# print the result
+print(hamming_distances)
+
+# %%
+# print the nearest family member
+print('The nearest family members are:')
+for i, member in enumerate(nearest_fam_victims):
+    print(f'Family member {nearest_fam[i]}: {member} with a hamming distance of {min_distance} from the victim sequence')
+
+# %%
+# Multiple Sequence Alignment
+align = MultipleSeqAlignment(sequences)
+
+# %%
+# Distance Calculator
+calculator = DistanceCalculator('identity')
+dm = calculator.get_distance(align)
+
+# %%
+# Distance Tree Constructor
+constructor = DistanceTreeConstructor(calculator)
+
+# %%
+# UPGMA Tree
+UPGMA_tree = constructor.upgma(dm)
+Phylo.draw(UPGMA_tree)
+
+# %%
+# Neighbor Joining Tree
+Nj_tree = constructor.nj(dm)
+Phylo.draw(Nj_tree)
+
+
