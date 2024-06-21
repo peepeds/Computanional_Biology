@@ -1,9 +1,14 @@
 # %%
 from Bio.Seq import Seq 
 from Bio.SeqRecord import SeqRecord
-from Bio import Phylo
+from Bio import Phylo  , AlignIO
 from Bio.Align import MultipleSeqAlignment
 from Bio.Phylo.TreeConstruction import DistanceCalculator, DistanceTreeConstructor
+import numpy as np
+import pandas as pd
+from scipy.cluster.hierarchy import dendrogram, linkage
+import matplotlib.pyplot as plt
+from tabulate import tabulate
 
 # %%
 # Making Model
@@ -68,5 +73,23 @@ Phylo.draw(UPGMA_tree)
 # Neighbor Joining Tree
 Nj_tree = constructor.nj(dm)
 Phylo.draw(Nj_tree)
+
+# %%
+num_sequences = len(sequences)
+hamming_matrix = np.zeros((num_sequences, num_sequences), dtype=int)
+sequence_ids = [seq.id for seq in sequences]
+hamming_df = pd.DataFrame(hamming_matrix, index=sequence_ids, columns=sequence_ids)
+
+dm_matrix = np.array(dm)
+linkage_matrix = linkage(dm_matrix, method='average')
+
+# Membuat plot
+fig, ax = plt.subplots(figsize=(10, 5))
+dendrogram(linkage_matrix, labels=sequence_ids, orientation='right', ax=ax)
+
+# Menyesuaikan plot
+plt.xlabel('Jarak')
+plt.ylabel('DNA sequence')
+plt.show()
 
 
