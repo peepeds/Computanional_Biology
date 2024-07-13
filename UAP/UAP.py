@@ -362,14 +362,24 @@ print(f"Best gap open penalty: {best_gap_open_penalty}")
 print(f"Best gap extend penalty: {best_gap_extend_penalty}")
 
 # %%
-# mencetak hasil alignment terbaik
-best_alignments = pairwise2.align.globalxs(sequences[0], sequences[1], -best_gap_open_penalty, -best_gap_extend_penalty)
-print(format_alignment(*best_alignments[0]))
+#memberikan nilai inisiasi untuk skor alignment
+#nilai inisiasi adalah nilai terburuk yang mungkin
+best_alignment = None
+best_score = float('-inf')
 
 # %%
-# mencetak hasil alignment terbaik
-# ini adalah garis pertama dari alignment terbaik dari semua species terhadap Acipenser
-first_alignment_line = format_alignment(*best_alignments[0]).split('\n')[0]
+for j in range(1, len(sequences)):
+    alignments = pairwise2.align.globalxs(sequences[0], sequences[j], -best_gap_open_penalty, -best_gap_extend_penalty)
+    if alignments[0].score > best_score:
+        best_score = alignments[0].score
+        best_alignment = alignments[0]
+
+# %%
+print("\nBest alignment overall:")
+print(format_alignment(*best_alignment))
+
+# %%
+first_alignment_line = format_alignment(*best_alignment).split('\n')[0]
 print("First line of the best alignment:")
 print(first_alignment_line)
 
