@@ -384,6 +384,69 @@ print("First line of the best alignment:")
 print(first_alignment_line)
 
 # %% [markdown]
+# lakukan kode ini hanya ingin menggunakan 2 seq
+
+# %%
+sequences = [
+    str(apoeAcipenser[0].seq),
+    str(apoeSiniperca[0].seq)
+]
+
+# %%
+#fungsi untuk menghitung skor alignment
+#berguna untuk kperhitungan optimisasi
+def alignment_score(params):
+    gap_open_penalty, gap_extend_penalty = params
+    if gap_open_penalty < gap_extend_penalty:
+        return np.inf  # invalid parameter combination
+    total_score = 0
+    num_alignments = 0
+    for i in range(len(sequences)):
+        for j in range(i + 1, len(sequences)):
+            alignments = pairwise2.align.globalxs(sequences[i], sequences[j], -gap_open_penalty, -gap_extend_penalty)
+            total_score += alignments[0].score  # Add the score of the best alignment
+            num_alignments += 1
+    average_score = total_score / num_alignments
+    return -average_score  # Negative because differential_evolution minimizes the function
+
+# %%
+# menentukan nilai batas untuk gap open dan gap extend
+bounds = [(0.1, 10.0), (0.1, 10.0)]
+
+# melakukan pergitungan optimisasi
+result = differential_evolution(alignment_score, bounds)
+
+#mendapatkan hasil optimisasi untuk gap open dan gap extend
+best_gap_open_penalty, best_gap_extend_penalty = result.x
+
+# %%
+#menampilkan hasil optimisasi untuk gap open dan gap extend`
+print(f"Best gap open penalty: {best_gap_open_penalty}")
+print(f"Best gap extend penalty: {best_gap_extend_penalty}")
+
+# %%
+#memberikan nilai inisiasi untuk skor alignment
+#nilai inisiasi adalah nilai terburuk yang mungkin
+best_alignment = None
+best_score = float('-inf')
+
+# %%
+for j in range(1, len(sequences)):
+    alignments = pairwise2.align.globalxs(sequences[0], sequences[j], -best_gap_open_penalty, -best_gap_extend_penalty)
+    if alignments[0].score > best_score:
+        best_score = alignments[0].score
+        best_alignment = alignments[0]
+
+# %%
+print("\nBest alignment overall:")
+print(format_alignment(*best_alignment))
+
+# %%
+first_alignment_line = format_alignment(*best_alignment).split('\n')[0]
+print("First line of the best alignment:")
+print(first_alignment_line)
+
+# %% [markdown]
 # Nomor 5
 
 # %%
